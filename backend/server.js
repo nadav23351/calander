@@ -44,24 +44,34 @@ app.get('/events', (req, res) => {
 
 // נתיב להוספת אירוע למסד הנתונים
 app.post('/events', (req, res) => {
-  const { name, date, description } = req.body;
+  const { name, date } = req.body;
 
-  // שאילתת SQL להוספת אירוע
-  const query = 'INSERT INTO events (name, date, description) VALUES (?, ?, ?)';
-  db.query(query, [name, date, description], (err, result) => {
+  const query = 'INSERT INTO events (name, date) VALUES (?, ?)';
+  db.query(query, [name, date], (err, result) => {
     if (err) {
       return res.status(500).send({ message: 'Error creating event', error: err });
     }
     res.status(201).send({
       message: 'Event created successfully!',
-      event: { name, date, description }
+      event: { name, date }
     });
   });
 });
 
- 
+// נתיב למחיקת אירוע
+app.delete('/events/:id', (req, res) => {
+    const eventId = req.params.id;
   
+    const query = 'DELETE FROM events WHERE id = ?';
+    db.query(query, [eventId], (err, result) => {
+      if (err) {
+        return res.status(500).send({ message: 'Error deleting event', error: err });
+      }
+      res.status(200).send({ message: 'Event deleted successfully!' });
+    });
+  });
   
+
 
 // תחילת השמיעה של השרת
 app.listen(port, () => {

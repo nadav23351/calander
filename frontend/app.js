@@ -10,11 +10,31 @@ async function getEvents() {
       events.forEach(event => {
           const eventDiv = document.createElement('div');
           eventDiv.classList.add('event');
-          eventDiv.innerHTML = `<h3>${event.name}</h3><p>${event.date}</p>`; // תיקון כאן
+          eventDiv.innerHTML = `
+            <h3>${event.name}</h3>
+            <p>${event.date}</p>
+            <button onclick="deleteEvent(${event.id})">מחק</button> 
+          `; // הוספת כפתור מחיקה
           eventsList.appendChild(eventDiv);
       });
   } catch (error) {
       console.error('Error fetching events:', error);
+  }
+}
+
+// פונקציה למחיקת אירוע
+async function deleteEvent(eventId) {
+  try {
+    const response = await fetch(`http://localhost:3000/events/${eventId}`, {
+        method: 'DELETE',
+    });
+    const data = await response.json();
+    console.log(data.message); // הודעה על הצלחה
+
+    // עדכון רשימת האירועים לאחר מחיקה
+    getEvents();
+  } catch (error) {
+    console.error('Error deleting event:', error);
   }
 }
 
