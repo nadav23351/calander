@@ -7,6 +7,7 @@ WORKDIR /app
 # העתקת קבצי הבקאנד
 COPY package*.json ./
 RUN npm install
+RUN apt-get update && apt-get install -y netcat
 COPY server.js ./
 
 
