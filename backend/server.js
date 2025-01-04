@@ -12,7 +12,7 @@ app.use(express.json());
 
 // הגדרת החיבור למסד נתונים (MySQL)
 const db = mysql.createConnection({
-  host: 'db', // הכתובת של השרת (localhost ב-WSL)
+  host: 'mysql', // הכתובת של השרת (localhost ב-WSL)
   port: 3306,
   user: 'root',       // שם המשתמש במסד הנתונים
   password: '12123434Nadav',       // סיסמת ה-root (אם יש)

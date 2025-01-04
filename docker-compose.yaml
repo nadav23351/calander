@@ -1,51 +1,42 @@
-services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "80:80"
-    networks:
-      - app-network
+version: "3.9"
 
+services:
   backend:
     build:
       context: ./backend
     ports:
       - "3000:3000"
+    volumes:
+      - ./backend:/app
     environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASSWORD: "12123434Nadav"  # עדיף להשתמש בסביבה חיצונית או secrets
-      DB_NAME: "calendarDB"
-    networks:
-      - app-network
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12123434Nadav
+      - MYSQL_DATABASE=calendarDB
     depends_on:
-      - db
-    command: >
-        /bin/bash -c "
-          until nc -z -v -w30 db 3306; do
-            echo 'Waiting for MySQL...';
-            sleep 2;
-          done;
-          npm start
-        "
+      - mysql
+    # הוספת wait-for-it או bash script להמתנה עד שהמאגר מוכן
+    entrypoint: /bin/sh -c "until nc -z -v -w30 mysql 3306; do echo 'Waiting for MySQL...'; sleep 5; done; npm start"
 
-  db:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  mysql:
     image: mysql:8.0
-    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12123434Nadav
+      MYSQL_DATABASE: calendarDB
     ports:
       - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "12123434Nadav"
-      MYSQL_DATABASE: "calendarDB"
     volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - app-network
-
-networks:
-  app-network:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  db_data:
+  mysql_data:
+
