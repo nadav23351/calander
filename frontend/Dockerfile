@@ -1,8 +1,4 @@
-# שימוש ב-Nginx כשרת סטטי
 FROM nginx:alpine
-
-# העתקת קבצי הפרונטאנד לתוך השרת
-COPY . /usr/share/nginx/html
-
-# חשיפת הפורט של Nginx
-EXPOSE 80
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./ /usr/share/nginx/html
+EXPOSE 8080
