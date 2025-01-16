@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,3 +21,12 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.backend.service.port }}
+          env:
+            - name: MYSQL_HOST
+              value: {{ .Values.backend.env.MYSQL_HOST }}
+            - name: MYSQL_USER
+              value: {{ .Values.backend.env.MYSQL_USER }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.backend.env.MYSQL_PASSWORD }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.backend.env.MYSQL_DATABASE }}

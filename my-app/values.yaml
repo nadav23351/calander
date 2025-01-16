@@ -1,3 +1,4 @@
+
 global:
   replicaCount: 1
 
@@ -7,8 +8,12 @@ backend:
     tag: "latest"
     pullPolicy: IfNotPresent
   service:
-    type: ClusterIP
-    port: 8080
+    port: 3000
+  env:
+    MYSQL_HOST: mysql
+    MYSQL_USER: root
+    MYSQL_PASSWORD: 12123434Nadav
+    MYSQL_DATABASE: calendarDB
 
 frontend:
   image:
@@ -16,26 +21,23 @@ frontend:
     tag: "latest"
     pullPolicy: IfNotPresent
   service:
-    type: NodePort
-    port: 3000
+    port: 8080
 
-database:
+mysql:
   image:
     repository: mysql
-    tag: "5.7"
+    tag: "8.0"
     pullPolicy: IfNotPresent
   service:
-    type: ClusterIP
     port: 3306
-  mysql:
-    rootPassword: "12123434Nadav"
-    database: "calanderDB"
-  initSqlConfigMapName: "database-init-sql"
+  rootPassword: "12123434Nadav"
+  database: "calendarDB"
 
- 
- 
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+
+
+
+
+
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -73,7 +75,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
