@@ -12,11 +12,12 @@ app.use(express.json());
 
 // הגדרת החיבור למסד נתונים (MySQL)
 const db = mysql.createConnection({
-  host: 'mysql', // הכתובת של השרת (localhost ב-WSL)
+  host: process.env.MYSQL_HOST, // הכתובת של השרת (localhost ב-WSL)
   port: 3306,
-  user: 'root',       // שם המשתמש במסד הנתונים
-  password: '12123434Nadav',       // סיסמת ה-root (אם יש)
-  database: 'calendarDB' // שם מסד הנתונים שיצרנו
+  user: process.env.MYSQL_USER,       // שם המשתמש במסד הנתונים
+  password: process.env.MYSQL_PASSWORD,       // סיסמת ה-root (אם יש)
+  database: process.env.MYSQL_DATABASE, // שם מסד הנתונים שיצרנו
+  authPlugin: 'caching_sha2_password'
 });
 
 // בדיקת חיבור למסד הנתונים
@@ -75,5 +76,5 @@ app.delete('/api/events/:id', (req, res) => {
 
 // תחילת השמיעה של השרת
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at ${port}`);
 });

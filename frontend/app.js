@@ -1,68 +1,68 @@
-// פונקציה לשלוח בקשה לשרת ולקבל את האירועים
+// Define the API base URL
+const API_BASE_URL = 'http://localhost:3000/api';
+
+// Function to fetch events from the API
 async function getEvents() {
   try {
-      const response = await fetch('http://localhost:3000/events');
-      const events = await response.json();
+    const response = await axios.get(`${API_BASE_URL}/events`);
+    const events = response.data;
 
-      const eventsList = document.getElementById('events-list');
-      eventsList.innerHTML = ''; // ניקוי התוכן הקודם
+    const eventsList = document.getElementById('events-list');
+    eventsList.innerHTML = ''; // Clear previous content
 
-      events.forEach(event => {
-          const eventDiv = document.createElement('div');
-          eventDiv.classList.add('event');
-          eventDiv.innerHTML = `
-            <h3>${event.name}</h3>
-            <p>${event.date}</p>
-            <button onclick="deleteEvent(${event.id})">מחק</button> 
-          `; // הוספת כפתור מחיקה
-          eventsList.appendChild(eventDiv);
-      });
+    events.forEach(event => {
+      const eventDiv = document.createElement('div');
+      eventDiv.classList.add('event');
+      eventDiv.innerHTML = `
+        <h3>${event.name}</h3>
+        <p>${event.date}</p>
+        <button onclick="deleteEvent(${event.id})">מחק</button>
+      `;
+      eventsList.appendChild(eventDiv);
+    });
   } catch (error) {
-      console.error('Error fetching events:', error);
+    console.error('Error fetching events:', error);
   }
 }
 
-// פונקציה למחיקת אירוע
+// Function to delete an event
 async function deleteEvent(eventId) {
   try {
-    const response = await fetch(`http://localhost:3000/events/${eventId}`, {
-        method: 'DELETE',
-    });
-    const data = await response.json();
-    console.log(data.message); // הודעה על הצלחה
+    const response = await axios.delete(`${API_BASE_URL}/events/${eventId}`);
+    console.log(response.data.message);
 
-    // עדכון רשימת האירועים לאחר מחיקה
+    // Refresh events list after deletion
     getEvents();
   } catch (error) {
     console.error('Error deleting event:', error);
   }
 }
 
-// שליחה של אירוע חדש לשרת
-async function addEvent(event) {
+// Function to add a new event
+async function addEvent() {
   const name = document.getElementById('event-name').value;
   const date = document.getElementById('event-date').value;
 
-  const response = await fetch('http://localhost:3000/events', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, date })
-  });
+  try {
+    const response = await axios.post(`${API_BASE_URL}/events`, { name, date });
+    console.log(response.data.message);
 
-  const data = await response.json();
-  console.log(data.message); // הודעה על הצלחה
+    // Clear form fields after successful submission
+    document.getElementById('event-name').value = '';
+    document.getElementById('event-date').value = '';
 
-  // עדכון רשימת האירועים
-  getEvents();
+    // Refresh events list
+    getEvents();
+  } catch (error) {
+    console.error('Error adding event:', error);
+  }
 }
 
-// אירוע של שליחת הטופס
+// Form submit event handler
 document.getElementById('event-form').addEventListener('submit', function (event) {
   event.preventDefault();
-  addEvent(event);
+  addEvent();
 });
 
-// קריאה להציג את האירועים עם טעינת הדף
+// Load events when page loads
 getEvents();
