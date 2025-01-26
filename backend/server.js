@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 });
 
 // נתיב לקבלת כל האירועים
-app.get('/events', (req, res) => {
+app.get('/api/events', (req, res) => {
   db.query('SELECT * FROM events', (err, results) => {
     if (err) {
       return res.status(500).send({ message: 'Error fetching events', error: err });
@@ -44,7 +44,7 @@ app.get('/events', (req, res) => {
 });
 
 // נתיב להוספת אירוע למסד הנתונים
-app.post('/events', (req, res) => {
+app.post('/api/events', (req, res) => {
   const { name, date } = req.body;
 
   const query = 'INSERT INTO events (name, date) VALUES (?, ?)';
@@ -60,7 +60,7 @@ app.post('/events', (req, res) => {
 });
 
 // נתיב למחיקת אירוע
-app.delete('/events/:id', (req, res) => {
+app.delete('/api/events/:id', (req, res) => {
     const eventId = req.params.id;
   
     const query = 'DELETE FROM events WHERE id = ?';
@@ -72,7 +72,6 @@ app.delete('/events/:id', (req, res) => {
     });
   });
   
-
 
 // תחילת השמיעה של השרת
 app.listen(port, () => {
