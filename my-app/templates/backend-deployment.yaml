@@ -23,10 +23,13 @@ spec:
             - containerPort: {{ .Values.backend.service.port }}
           env:
             - name: MYSQL_HOST
-              value: {{ .Values.backend.env.MYSQL_HOST }}
+              value: {{ .Release.Name }}-mysql
             - name: MYSQL_USER
-              value: {{ .Values.backend.env.MYSQL_USER }}
+              value: root
             - name: MYSQL_PASSWORD
-              value: {{ .Values.backend.env.MYSQL_PASSWORD }}
-            - name: MYSQL_DATABASE
-              value: {{ .Values.backend.env.MYSQL_DATABASE }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-mysql  # Secret name
+                  key: mysql-root-password
+            # - name: MYSQL_DATABASE
+            #   value: {{ .Values.backend.env.MYSQL_DATABASE }}
