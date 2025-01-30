@@ -1,5 +1,6 @@
 // Define the API base URL
-const API_BASE_URL = 'http://localhost:3000/api';
+// const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'http://aa944ef8a2b0b4b648649f2c75ccfa5e-1170397937.us-east-1.elb.amazonaws.com:3000/api';
 
 // Function to fetch events from the API
 async function getEvents() {
@@ -24,6 +25,7 @@ async function getEvents() {
     console.error('Error fetching events:', error);
   }
 }
+
 
 // Function to delete an event
 async function deleteEvent(eventId) {

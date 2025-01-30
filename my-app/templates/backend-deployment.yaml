@@ -20,16 +20,13 @@ spec:
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.backend.service.port }}
+          - containerPort: {{ .Values.backend.service.port }}
           env:
             - name: MYSQL_HOST
-              value: {{ .Release.Name }}-mysql
+              value: my-mysql.mydb.svc.cluster.local
             - name: MYSQL_USER
               value: root
             - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-mysql  # Secret name
-                  key: mysql-root-password
-            # - name: MYSQL_DATABASE
-            #   value: {{ .Values.backend.env.MYSQL_DATABASE }}
+              value: "8V7Kl7fcz0"
+            - name: MYSQL_DATABASE
+              value: {{ .Values.backend.env.MYSQL_DATABASE }}

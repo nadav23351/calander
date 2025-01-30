@@ -20,4 +20,4 @@ spec:
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.frontend.service.port }}
+          - containerPort: {{ .Values.frontend.service.port }}

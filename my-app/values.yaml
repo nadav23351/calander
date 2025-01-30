@@ -18,7 +18,7 @@ backend:
 frontend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend"
-    tag: "new20"
+    tag: "new100"
     pullPolicy: IfNotPresent
   service:
     port: 8080
