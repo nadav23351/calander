@@ -13,64 +13,33 @@ backend:
     MYSQL_HOST: mysql
     MYSQL_USER: root
     MYSQL_PASSWORD: 12123434Nadav
-    MYSQL_DATABASE: calendarDB
+    MYSQL_DATABASE: calenderDb
 
 frontend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend"
-    tag: "new100"
+    tag: "new140"
     pullPolicy: IfNotPresent
   service:
     port: 8080
 
 mysql:
+  fullnameOverride: my-mysql
+  auth:
+    rootPassword: "ASDqwe123!@#"
+    database: "calenderDb"
+  initdbScripts:
+    create_table.sql: |
+      USE calenderDb;
+      CREATE TABLE IF NOT EXISTS events (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
   primary:
-    configuration: |-
-        [mysqld]
-        mysql_native_password=ON
-        authentication_policy='{{- .Values.auth.authenticationPolicy | default "* ,," }}'
-        skip-name-resolve
-        explicit_defaults_for_timestamp
-        basedir=/opt/bitnami/mysql
-        plugin_dir=/opt/bitnami/mysql/lib/plugin
-        port={{ .Values.primary.containerPorts.mysql }}
-        mysqlx={{ ternary 1 0 .Values.primary.enableMySQLX }}
-        mysqlx_port={{ .Values.primary.containerPorts.mysqlx }}
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        datadir=/bitnami/mysql/data
-        tmpdir=/opt/bitnami/mysql/tmp
-        max_allowed_packet=16M
-        bind-address=*
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-        log-error=/opt/bitnami/mysql/logs/mysqld.log
-        character-set-server=UTF8
-        slow_query_log=0
-        long_query_time=10.0
-        {{- if .Values.tls.enabled }}
-        ssl_cert=/opt/bitnami/mysql/certs/{{ .Values.tls.certFilename }}
-        ssl_key=/opt/bitnami/mysql/certs/{{ .Values.tls.certKeyFilename }}
-        {{- if (include "mysql.tlsCACert" .) }}
-        ssl_ca={{ include "mysql.tlsCACert" . }}
-        {{- end }}
-        {{- end }}
-
-        [client]
-        port={{ .Values.primary.containerPorts.mysql }}
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        default-character-set=UTF8
-        plugin_dir=/opt/bitnami/mysql/lib/plugin
-
-        [manager]
-        port={{ .Values.primary.containerPorts.mysql }}
-        socket=/opt/bitnami/mysql/tmp/mysql.sock
-        pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-
     persistence:
-      enabled: false 
-
-
-
-
+      enabled: false
 
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
