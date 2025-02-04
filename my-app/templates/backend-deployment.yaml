@@ -17,7 +17,7 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.35.0-uclibc
-          command: ['sh', '-c', 'until nc -z my-mysql.test2.svc.cluster.local 3306; do echo "Waiting for MySQL..."; sleep 5; done;']
+          command: ['sh', '-c', 'until nc -z my-mysql.feb4.svc.cluster.local 3306; do echo "Waiting for MySQL..."; sleep 5; done;']
       containers:
         - name: backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
@@ -26,7 +26,7 @@ spec:
           - containerPort: {{ .Values.backend.service.port }}
           env:
             - name: MYSQL_HOST
-              value: my-mysql.test2.svc.cluster.local
+              value: my-mysql.feb4.svc.cluster.local
             - name: MYSQL_USER
               value: root
             - name: MYSQL_PASSWORD
