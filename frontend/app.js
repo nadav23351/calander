@@ -1,6 +1,6 @@
 // Define the API base URL
 // const API_BASE_URL = 'http://localhost:3000/api';
-const API_BASE_URL = 'http://a18aae62b5fa546618767355ff09387d-347669486.us-east-1.elb.amazonaws.com:3000/api';
+const API_BASE_URL = 'https://backend.nadav.online/api';
 
 // Function to fetch events from the API
 async function getEvents() {
