@@ -53,3 +53,8 @@ terraform apply -var-file="secret.tfvars"
 8. click on create application and copy `argo-application.yaml` content and past it in edit as yaml and change it to the name of your desire `namespace`.
 
 9. sync your application.
+
+10. you can destroy them in reverse order you created them 
+- first, argo_application
+- then, aws_cluster_resource
+- lastly, aws
