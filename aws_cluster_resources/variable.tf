@@ -17,3 +17,9 @@ variable "clustername" {
   default     = "staging"
   description = "EKS Cluster Name"
 }
+
+
+variable "cf_api_token" {
+  description = "cloudflare api token"
+  sensitive   = true
+}

@@ -28,11 +28,6 @@ variable "acmemail" {
   sensitive   = true
 }
 
-variable "cf_api_token" {
-  description = "cloudflare api token"
-  sensitive   = true
-}
-
 variable "argoadminpassword" {
   description = "argocd admin password"
   sensitive   = true

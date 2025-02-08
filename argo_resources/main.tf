@@ -65,6 +65,13 @@ resource "helm_release" "argocd" {
     value = bcrypt(var.argoadminpassword)
   }
 
+  lifecycle {
+    ignore_changes = [
+      set_sensitive, # Ignore changes to sensitive values
+      metadata,      # Ignore changes to metadata
+    ]
+  }
+
   depends_on = [ kubernetes_manifest.cluster_issuer_prod ]
 }
 
@@ -78,7 +85,7 @@ provider "argocd" {
 
 # Add the GitHub repository to Argo CD
 resource "argocd_repository" "github_repo" {
-  repo = "https://github.com/faizananwar532/calendar-app" # Replace with your GitHub repository URL
+  repo = "https://github.com/nadav23351/calander" # Replace with your GitHub repository URL
   username = var.github_username
   password = var.github_token
   depends_on = [helm_release.argocd]  
