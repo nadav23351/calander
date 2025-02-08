@@ -10,7 +10,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: my-app
-    repoURL: 'https://github.com/faizananwar532/calendar-app'
+    repoURL: 'https://github.com/nadav23351/calander'
     targetRevision: HEAD
     helm:
       valueFiles:
