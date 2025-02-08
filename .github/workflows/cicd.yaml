@@ -34,9 +34,7 @@ jobs:
           BACKEND_REPOSITORY: 381492297447.dkr.ecr.us-east-1.amazonaws.com/backend
         run: |
           docker build -t $BACKEND_REPOSITORY:$SHORT_SHA ./backend
-          docker tag $BACKEND_REPOSITORY:$SHORT_SHA $BACKEND_REPOSITORY:latest
           docker push $BACKEND_REPOSITORY:$SHORT_SHA
-          docker push $BACKEND_REPOSITORY:latest
 
       - name: Build and Push Frontend Image
         env:
@@ -44,11 +42,5 @@ jobs:
           FRONTEND_REPOSITORY: 381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend
         run: |
           docker build -t $FRONTEND_REPOSITORY:$SHORT_SHA ./frontend
-          docker tag $FRONTEND_REPOSITORY:$SHORT_SHA $FRONTEND_REPOSITORY:latest
           docker push $FRONTEND_REPOSITORY:$SHORT_SHA
-          docker push $FRONTEND_REPOSITORY:latest
 
-    #   - name: Verify Images in ECR
-    #     run: |
-    #       aws ecr describe-images --repository-name backend
-    #       aws ecr describe-images --repository-name frontend
