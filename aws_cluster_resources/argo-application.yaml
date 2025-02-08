@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  finalizers: []
+spec:
+  destination:
+    name: ''
+    namespace: feb8
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: my-app
+    repoURL: 'https://github.com/faizananwar532/calendar-app'
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: namespace
+          value: feb8
+  sources: []
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
