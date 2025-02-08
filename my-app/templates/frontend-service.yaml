@@ -1,11 +1,24 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: {{ template "relname" . }}-frontend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "relname" . }}
+    app.kubernetes.io/instance: {{ template "relname" . }}-frontend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: {{ template "relname" . }}
+    app.kubernetes.io/managed-by: helm
 spec:
-  selector:
-    app: frontend
+  type: ClusterIP
   ports:
-    - port: 8080
-      targetPort: {{ .Values.frontend.service.port }}
-  type: LoadBalancer
+  - port: 80
+    targetPort: {{ .Values.frontend.service.port }}
+    protocol: TCP
+    name: http-frontend
+  selector:
+    app: {{ template "relname" . }}
+    component: frontend
+
+

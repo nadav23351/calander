@@ -2,6 +2,8 @@
 global:
   replicaCount: 1
 
+namespace: staging
+
 backend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/backend"
@@ -14,14 +16,16 @@ backend:
     MYSQL_USER: root
     MYSQL_PASSWORD: 12123434Nadav
     MYSQL_DATABASE: calenderDb
+  hostname: backend.nadav.online
 
 frontend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend"
-    tag: "newest11"
+    tag: "new532"
     pullPolicy: IfNotPresent
   service:
     port: 8080
+  hostname: nadav.online
 
 mysql:
   fullnameOverride: my-mysql

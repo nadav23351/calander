@@ -1,23 +1,31 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: {{ template "relname" . }}-frontend
+  namespace: {{ .Values.namespace }}
   labels:
-    app: frontend
+    app.kubernetes.io/name: {{ template "relname" . }}
+    app.kubernetes.io/instance: {{ template "relname" . }}-frontend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: {{ template "relname" . }}
+    app.kubernetes.io/managed-by: helm
 spec:
-  replicas: {{ .Values.global.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: {{ template "relname" . }}
+      component: frontend
   template:
     metadata:
       labels:
-        app: frontend
+        app: {{ template "relname" . }}
+        component: frontend
     spec:
       containers:
-        - name: frontend
-          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
-          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
-          ports:
-          - containerPort: {{ .Values.frontend.service.port }}
+      - name: {{ template "relname" . }}-frontend
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend.service.port }}
+          name: http-frontend

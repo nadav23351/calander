@@ -1,32 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: {{ template "relname" . }}-backend
+  namespace: {{ .Values.namespace }}
   labels:
-    app: backend
+    app.kubernetes.io/name: {{ template "relname" . }}
+    app.kubernetes.io/instance: {{ template "relname" . }}-backend
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: {{ template "relname" . }}
+    app.kubernetes.io/managed-by: helm
 spec:
   replicas: {{ .Values.global.replicaCount }}
   selector:
     matchLabels:
-      app: backend
+      app: {{ template "relname" . }}
+      component: backend
   template:
     metadata:
       labels:
-        app: backend
+        app: {{ template "relname" . }}
+        component: backend
     spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.35.0-uclibc
-          command: ['sh', '-c', 'until nc -z my-mysql.feb4.svc.cluster.local 3306; do echo "Waiting for MySQL..."; sleep 5; done;']
+          command: ['sh', '-c', 'until nc -z my-mysql.{{ .Values.namespace }}.svc.cluster.local 3306; do echo "Waiting for MySQL..."; sleep 5; done;']
       containers:
-        - name: backend
+        - name: {{ template "relname" . }}-backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
           - containerPort: {{ .Values.backend.service.port }}
+            name: http-backend
           env:
             - name: MYSQL_HOST
-              value: my-mysql.feb4.svc.cluster.local
+              value: my-mysql.{{ .Values.namespace }}.svc.cluster.local
             - name: MYSQL_USER
               value: root
             - name: MYSQL_PASSWORD
