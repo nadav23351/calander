@@ -33,14 +33,14 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           BACKEND_REPOSITORY: 381492297447.dkr.ecr.us-east-1.amazonaws.com/backend
         run: |
-          docker build -t $BACKEND_REPOSITORY:$SHORT_SHA ./backend
-          docker push $BACKEND_REPOSITORY:$SHORT_SHA
+          docker build -t $BACKEND_REPOSITORY:new533 ./backend
+          docker push $BACKEND_REPOSITORY:new533
 
       - name: Build and Push Frontend Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           FRONTEND_REPOSITORY: 381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend
         run: |
-          docker build -t $FRONTEND_REPOSITORY:$SHORT_SHA ./frontend
-          docker push $FRONTEND_REPOSITORY:$SHORT_SHA
+          docker build -t $FRONTEND_REPOSITORY:new533 ./frontend
+          docker push $FRONTEND_REPOSITORY:new533
 

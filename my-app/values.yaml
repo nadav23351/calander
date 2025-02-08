@@ -7,7 +7,7 @@ namespace: staging
 backend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/backend"
-    tag: "newest4"
+    tag: "new533"
     pullPolicy: IfNotPresent
   service:
     port: 3000
@@ -21,7 +21,7 @@ backend:
 frontend:
   image:
     repository: "381492297447.dkr.ecr.us-east-1.amazonaws.com/frontend"
-    tag: "new532"
+    tag: "new533"
     pullPolicy: IfNotPresent
   service:
     port: 8080
