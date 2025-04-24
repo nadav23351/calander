@@ -25,7 +25,7 @@ frontend:
     pullPolicy: IfNotPresent
   service:
     port: 8080
-  hostname: staging.nadav.online
+  hostname: nadav.online
 
 mysql:
   fullnameOverride: my-mysql
