@@ -280,6 +280,64 @@ resource "aws_eks_node_group" "StagingSpotNodeGgroup" {
   }
 }
 
+# OIDC Provider Thumbprint
+data "tls_certificate" "staging_thumbprint" {
+  url = aws_eks_cluster.Staging.identity[0].oidc[0].issuer
+}
+
+# OIDC Provider for IRSA
+resource "aws_iam_openid_connect_provider" "staging_oidc_provider" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.staging_thumbprint.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.Staging.identity[0].oidc[0].issuer
+}
+
+# IAM Trust Policy for EBS CSI Driver
+data "aws_iam_policy_document" "ebs_csi_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    condition {
+      test     = "StringLike"
+      variable = "${replace(aws_iam_openid_connect_provider.staging_oidc_provider.url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "${replace(aws_iam_openid_connect_provider.staging_oidc_provider.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.staging_oidc_provider.arn]
+    }
+  }
+}
+
+# IAM Role for EBS CSI Driver
+resource "aws_iam_role" "ebs_csi_driver_role_staging" {
+  name               = "AmazonEKS_EBS_CSI_DriverRole_Staging"
+  assume_role_policy = data.aws_iam_policy_document.ebs_csi_assume_role_policy.json
+}
+
+# Attach EBS CSI Driver Policy
+resource "aws_iam_role_policy_attachment" "ebs_csi_driver_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.ebs_csi_driver_role_staging.name
+}
+
+# Install EBS CSI Driver as Addon
+resource "aws_eks_addon" "ebs_csi_driver_addon" {
+  cluster_name             = aws_eks_cluster.Staging.name
+  addon_name               = "aws-ebs-csi-driver"
+  addon_version            = "v1.32.0-eksbuild.1"
+  service_account_role_arn = aws_iam_role.ebs_csi_driver_role_staging.arn
+}
+
+
 ### outputs
 output "nat_gateway_eips" {
   description = "EIP addresses assigned to NAT Gateways"
